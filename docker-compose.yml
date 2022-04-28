@@ -1,0 +1,36 @@
+version: "3"
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '99:99' # Public HTTP Port
+      - '100:100' # Public HTTPS Port
+      - '101:101' # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - '21:21' # FTP
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "Pheakdey"
+      DB_MYSQL_PASSWORD: "Pheakdey@123"
+      DB_MYSQL_NAME: "Pheakdey"
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - db
+
+  db:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Pheakdey@123'
+      MYSQL_DATABASE: 'Pheakdey'
+      MYSQL_USER: 'Pheakdey'
+      MYSQL_PASSWORD: 'Pheakdey@123'
+    volumes:
+      - ./data/mysql:/var/lib/mysql
